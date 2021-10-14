@@ -1,9 +1,9 @@
 import React, {useContext, useCallback} from 'react';
 import {useDropzone} from 'react-dropzone';
 import styled, {ThemeProvider} from 'styled-components';
-import {lightTheme} from "../../constants/theme";
+import {lightTheme, fonts} from "../../constants/theme";
 import {formatToBase64} from "../../helper/b64-encoding";
-import {LhotseContext} from "../../context/index.context";
+import {LhotseContext} from '../../context/index.context';
 
 // const getColor = (props) => {
 //     if (props.isDragAccept) {
@@ -22,6 +22,7 @@ const theme = {
     backgroundColor: lightTheme.neutral,
     borderColor: lightTheme.primary,
     color: lightTheme.primary,
+    fontRegular: fonts.robotoRegular,
 }
 
 const Container = styled.div`
@@ -47,13 +48,12 @@ const Wrapper = styled.div`
    align-items: center;
    background-color: ${props => props.theme.backgroundColor};
    padding: 0 50px;
-
    border-radius: 8px;
 `;
 
 
 const Dropzone = () => {
-    const { setFileName, setBase64} = useContext(LhotseContext);
+    const {setFileName, setBase64} = useContext(LhotseContext);
 
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.forEach((file) => {
@@ -78,12 +78,8 @@ const Dropzone = () => {
                 <Container {...getRootProps()}>
                     <input {...getInputProps()} />
                     <p>Drag 'n' drop some files here, or click to select files</p>
-                    <p>
-                        {/*{*/}
-                        {/*    (files.length > 0) ? `${files.name}` : 'Bad file'*/}
-                        {/*}*/}
-                    </p>
                 </Container>
+
             </Wrapper>
         </ThemeProvider>
     );

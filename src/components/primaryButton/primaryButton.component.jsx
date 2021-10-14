@@ -6,7 +6,7 @@ import {lightTheme} from "../../constants/theme";
 const ActionButton = styled.div`
   width: 190px;
   height: 40px;
-  padding: 5px;
+  padding: 5px 10px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
@@ -24,15 +24,15 @@ const ActionButton = styled.div`
 `;
 
 const theme = {
-    backgroundColor: lightTheme.secondary,
-    hover: lightTheme.secondary2,
+    backgroundColor: lightTheme.primary,
+    hover: lightTheme.primary2,
     white: lightTheme.textWhite,
 }
 
 const PrimaryButton = ({name, handleClick}) => {
     return (
         <ThemeProvider theme={theme}>
-            <ActionButton onclick={handleClick}>
+            <ActionButton onClick={handleClick}>
                 {name}
             </ActionButton>
         </ThemeProvider>
