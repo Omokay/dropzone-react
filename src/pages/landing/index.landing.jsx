@@ -5,12 +5,17 @@ import Navbar from "../../components/navbar/navbar.component";
 import DropZone from "../../components/dropzone/dropzone.component";
 import PrimaryButton from "../../components/primaryButton/primaryButton.component";
 import {LhotseContext} from "../../context/index.context";
-import {fonts, lightTheme} from "../../constants/theme";
-import Icons from '../../constants/index.icons';
+import {bigfonts, lightTheme} from "../../constants/theme";
+import Icons from '../../constants';
 import {axiosPost, baseUrl} from "../../http/axios-requests.http";
+import {showLoader, hideLoader} from "../../components/Loader/loader.component";
+import Feedback from "../../components/postFeedback/feedback.component";
+
+
 
 const theme = {
-    fontRegular: fonts.robotoRegular,
+    bigfontweight: bigfonts.fontWeight,
+    bigfontsize: bigfonts.fontSize,
     accent: lightTheme.secondary2,
     textColor: lightTheme.primary,
 }
@@ -47,6 +52,22 @@ const ButtonWrap = styled.div`
     padding: 10px 0;
 `;
 
+const Header = styled.div`
+  width: 50%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const HeaderText = styled.p`
+   font-weight: ${props => props.theme.bigfontweight};
+   font-size: ${props => props.theme.bigfontsize};
+   //color: ${props => props.theme.textColor};
+   text-transform: uppercase;
+   text-align: center;
+`;
+
 const FileDesc = styled.div`
   min-width: 127px;
   max-width: 200px;
@@ -68,13 +89,14 @@ const FileDesc = styled.div`
 const SmallText = styled.p`
   min-width: 127px;
   max-width: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 40px;
   padding: 5px;
-  overflow-x: hidden;
   overflow-y: hidden;
-  text-align: center;
+  overflow-x: hidden;
   color: ${props => props.theme.textColor};
-  font-family: ${props => props.theme.fontRegular};
 `;
 
 
@@ -89,6 +111,10 @@ const Landing = () => {
 
     let [isLoading, setLoading] = useState(true);
 
+    let [success, setSuccess] = useState(false);
+    let [error, setError] = useState(false);
+    let [info, setInfo] = useState(false);
+
     // Loader before DOM renders
     useEffect(() => {
         setInterval(() => setLoading(false), 2000);
@@ -101,17 +127,36 @@ const Landing = () => {
     };
 
     // Handle Base64 file upload to endpoint in baseURL using Axios
-    const handleUpload = (base64File) => {
-        if (base64File.length > 1 && typeof base64File === 'string') {
+
+    const handleUpload = () => {
+        if (fileName.length < 1) setInfo(true)
+        if (base64File.length > 1 && typeof base64File === 'string' && fileName.length > 0) {
             let requestBody = {
                 File: base64File,
                 FileName: fileName,
-            }
-            axiosPost(`${baseUrl}, ${requestBody}`).then((res) => {
-                console.log(res);
+            };
+            showLoader()
+            axiosPost(`${baseUrl}`, requestBody).then((res) => {
+                if (res) {
+                   hideLoader();
+                   setSuccess(true);
+                   setError(false);
+
+                   setFileName('');
+                   setBase64('');
+                } else {
+                    hideLoader();
+                    setError(true);
+                    setSuccess(false);
+                }
             });
+           // setInfo(false);
         }
+        setSuccess(false);
+        setError(false);
+
     };
+
 
     return (
         <ThemeProvider theme={theme}>
@@ -123,6 +168,11 @@ const Landing = () => {
                <Main>
                    <Navbar />
                    <Container>
+                       <Header>
+                           <HeaderText>
+                               Upload File in Base64 Format
+                           </HeaderText>
+                       </Header>
                        <DropZone/>
                        <ButtonWrap>
                            {
@@ -132,9 +182,14 @@ const Landing = () => {
                                         <img  src={Icons.trash} alt='cancel'/>
                                    </FileDesc> : ''
                            }
-                           <PrimaryButton name='Upload' handleClick={() => handleUpload(base64File)}/>
+                           <PrimaryButton name='Upload' handleClick={handleUpload}/>
                        </ButtonWrap>
                    </Container>
+
+               {/* Conditional Rendering of Toast Messages   */}
+                   {(success) ?  <Feedback notify='Upload was successful' status='success'/>: ''}
+                   {(error) ?   <Feedback notify='Upload was Failed' status='error'/> : ''}
+                   {(info) ?  <Feedback notify='Choose a file to upload' status='hint'/> : ''}
                </Main>
             }
         </ThemeProvider>

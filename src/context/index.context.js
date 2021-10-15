@@ -2,7 +2,7 @@ import React, { useState, createContext } from 'react';
 export const LhotseContext = createContext(null);
 
 const LhotseContextProvider = ({ children }) => {
-    let [theme, setTheme] = useState('light');
+    let [darkTheme, setTheme] = useState(false);
     let [base64File, setBase64] = useState('');
     let [fileName, setFileName] = useState('');
 
@@ -10,7 +10,7 @@ const LhotseContextProvider = ({ children }) => {
     return (
         <LhotseContext.Provider
             value={{
-                theme, setTheme,
+                darkTheme, setTheme,
                 fileName, setFileName,
                 base64File, setBase64
             }}

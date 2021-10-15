@@ -10,25 +10,23 @@ export const lightTheme = {
 };
 
 
-export const darkTheme = {
+export const dark = {
     primary: '#78dab1',
+    primary2: '#61b894',
     secondary: '#240d85',
-    background: '#000000',
+    background: '#020010',
     neutral: '#e8e8ea',
 };
 
 
-export const fonts = {
-    robotoSmall: {
-        fontFamily: 'Roboto\', sans-serif',
+export const smallfonts =  {
         fontWeight: 300,
-    },
-    robotoRegular: {
-        fontFamily: 'Roboto\', sans-serif',
+};
+
+export const regularfonts =  {
         fontWeight: 400,
-    },
-    robotoBig: {
-        fontFamily: 'Roboto\', sans-serif',
+};
+export const bigfonts =  {
         fontWeight: 700,
-    }
-}
+        fontSize: '1.5rem',
+};

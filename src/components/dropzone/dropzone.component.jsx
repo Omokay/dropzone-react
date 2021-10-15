@@ -1,28 +1,16 @@
 import React, {useContext, useCallback} from 'react';
 import {useDropzone} from 'react-dropzone';
 import styled, {ThemeProvider} from 'styled-components';
-import {lightTheme, fonts} from "../../constants/theme";
-import {formatToBase64} from "../../helper/b64-encoding";
+import {lightTheme, regularfonts} from "../../constants/theme";
+// import {formatToBase64} from "../../helper/b64-encoding";
 import {LhotseContext} from '../../context/index.context';
-
-// const getColor = (props) => {
-//     if (props.isDragAccept) {
-//         return '#00e676';
-//     }
-//     if (props.isDragReject) {
-//         return '#ff1744';
-//     }
-//     if (props.isDragActive) {
-//         return '#2196f3';
-//     }
-//     return '#ac4040';
-// }
 
 const theme = {
     backgroundColor: lightTheme.neutral,
     borderColor: lightTheme.primary,
     color: lightTheme.primary,
-    fontRegular: fonts.robotoRegular,
+    fontFamily: regularfonts.fontFamily,
+    fontWeight: regularfonts.fontWeight,
 }
 
 const Container = styled.div`
@@ -35,7 +23,7 @@ const Container = styled.div`
   border-radius: 2px;
   border-color: ${props => props.theme.borderColor};
   border-style: dashed;
-  color: ${props => props.theme.color};
+  //color: ${props => props.theme.color};
   outline: none;
   transition: border .24s ease-in-out;
 `;
@@ -46,29 +34,40 @@ const Wrapper = styled.div`
    display: flex;
    justify-content: center;
    align-items: center;
+   margin: 0 auto;
    background-color: ${props => props.theme.backgroundColor};
    padding: 0 50px;
    border-radius: 8px;
 `;
 
+const Paragraph = styled.p`
+  font-weight: ${props => props.theme.fontWeight};
+`;
 
 const Dropzone = () => {
-    const {setFileName, setBase64} = useContext(LhotseContext);
+    const {setFileName, fileName, setBase64} = useContext(LhotseContext);
 
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.forEach((file) => {
+            // Set File name
             setFileName(file.name);
-            setBase64(formatToBase64(file));
+
+            // Instantiate File Reader
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onabort = () =>  'File reading was aborted'
+            reader.onerror = () => 'File could not be read'
+
+            // Once onload is invoked, set result to base64File
+            reader.onload = () => {
+                setBase64(reader.result);
+            };
         })
     }, [])
 
     const {
         getRootProps,
         getInputProps,
-        // isDragActive,
-        // isDragAccept,
-        // isDragReject,
-        // acceptedFiles,
     } = useDropzone({onDrop});
 
 
@@ -77,7 +76,12 @@ const Dropzone = () => {
             <Wrapper>
                 <Container {...getRootProps()}>
                     <input {...getInputProps()} />
-                    <p>Drag 'n' drop some files here, or click to select files</p>
+                    <Paragraph>
+                        {
+                            (fileName.length > 0) ? `Click the Upload button to submit ${fileName} in base64 format` :
+                                'Drag \'n\' drop a file here, or click to choose a file'
+                        }
+                    </Paragraph>
                 </Container>
 
             </Wrapper>

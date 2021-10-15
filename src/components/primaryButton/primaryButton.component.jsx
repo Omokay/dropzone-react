@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import styled, {ThemeProvider} from 'styled-components';
-import {lightTheme} from "../../constants/theme";
+import {bigfonts, lightTheme} from "../../constants/theme";
+import {LhotseContext} from "../../context/index.context";
+
 
 
 const ActionButton = styled.div`
@@ -11,8 +13,8 @@ const ActionButton = styled.div`
   display: flex;
   justify-content: center;
   text-transform: uppercase;
+  font-weight: ${props => props.theme.fontWeight};
   align-items: center;
-  font-weight: 400;
   color: ${props => props.theme.white};
   background-color: ${props => props.theme.backgroundColor};
   
@@ -22,17 +24,22 @@ const ActionButton = styled.div`
     
   }
 `;
-
 const theme = {
     backgroundColor: lightTheme.primary,
+    fontWeight: bigfonts.fontWeight,
     hover: lightTheme.primary2,
     white: lightTheme.textWhite,
+
 }
 
+
 const PrimaryButton = ({name, handleClick}) => {
+    const {darkTheme} = useContext(LhotseContext);
     return (
         <ThemeProvider theme={theme}>
-            <ActionButton onClick={handleClick}>
+            <ActionButton style={{
+                backgroundColor: (darkTheme) ? '#78dab1' : ''
+            }} onClick={handleClick}>
                 {name}
             </ActionButton>
         </ThemeProvider>
