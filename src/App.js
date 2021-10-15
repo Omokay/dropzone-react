@@ -1,6 +1,5 @@
 import Routes from './routes/index.routes';
-import LhotseContextProvider, {LhotseContext} from './context/index.context';
-import {Light, Dark} from "./constants/global.styles";
+import LhotseContextProvider from './context/index.context';
 
 
 
