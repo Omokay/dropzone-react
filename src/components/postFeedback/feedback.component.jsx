@@ -10,7 +10,7 @@ const Feedback = ({notify, status}) => {
         } else if (status.toLowerCase() === 'hint') {
             toast.error(notify);
         }
-    }, []);
+    }, [notify, status]);
     return (
         <div>
             <Toaster position="bottom-center" />
