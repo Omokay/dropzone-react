@@ -70,7 +70,6 @@ const Dropzone = () => {
         getInputProps,
     } = useDropzone({onDrop});
 
-
     return (
         <ThemeProvider theme={theme}>
             <Wrapper>

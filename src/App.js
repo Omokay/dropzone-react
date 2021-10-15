@@ -7,9 +7,6 @@ import {Light, Dark} from "./constants/global.styles";
 function App() {
   return (
     <LhotseContextProvider>
-        {/*{*/}
-        {/*    (darkTheme) ? <Dark/> : <Light/>*/}
-        {/*}*/}
         <div className="App">
             <Routes/>
         </div>
