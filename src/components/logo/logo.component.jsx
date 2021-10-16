@@ -3,9 +3,21 @@ import styled from 'styled-components';
 
 
 const LogoWrapper = styled.a`
-   width: 226px;
-   height: 34px;
+   width: 216px;
+   height: 30px;
    padding: 5px;
+
+  @media (max-width: 908px){
+    width: 186px;
+    height: 28px;
+    padding: 3px;
+  }
+
+  @media (max-width: 608px){
+    width: 126px;
+    height: 24px;
+    padding: 3px;
+  }
 `;
 
 const Loggo = styled.img`
