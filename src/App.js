@@ -1,13 +1,19 @@
-import Routes from './routes/index.routes';
 import LhotseContextProvider from './context/index.context';
+import {
+    BrowserRouter as Router,
+    Route
+} from 'react-router-dom';
+import Landing from './pages/landing/index.landing';
 
+const App = () => {
 
-
-function App() {
   return (
     <LhotseContextProvider>
+
         <div className="App">
-            <Routes/>
+            <Router>
+                <Route exact path='/'><Landing/></Route>
+            </Router>
         </div>
     </LhotseContextProvider>
   );

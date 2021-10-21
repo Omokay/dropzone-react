@@ -1,10 +1,10 @@
-import React, { useState, createContext } from 'react';
+import { useState, createContext } from 'react';
 export const LhotseContext = createContext(null);
 
 const LhotseContextProvider = ({ children }) => {
-    let [darkTheme, setTheme] = useState(false);
-    let [base64File, setBase64] = useState('');
-    let [fileName, setFileName] = useState('');
+    const [darkTheme, setTheme] = useState(false);
+    const [base64File, setBase64] = useState('');
+    const [fileName, setFileName] = useState('');
 
 
     return (

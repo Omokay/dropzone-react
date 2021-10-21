@@ -1,4 +1,4 @@
-import React, {useContext, useCallback} from 'react';
+import {useContext, useCallback} from 'react';
 import {useDropzone} from 'react-dropzone';
 import styled, {ThemeProvider} from 'styled-components';
 import {lightTheme, regularfonts} from "../../constants/theme";

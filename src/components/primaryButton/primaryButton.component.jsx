@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import styled, {ThemeProvider} from 'styled-components';
 import {bigfonts, lightTheme} from "../../constants/theme";
 import {LhotseContext} from "../../context/index.context";

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import Spinner from '../../components/spinner/spinner.component';
 import styled, {ThemeProvider} from 'styled-components';
 import Navbar from "../../components/navbar/navbar.component";
@@ -10,6 +10,99 @@ import Icons from '../../constants';
 import {axiosPost, baseUrl} from "../../http/axios-requests.http";
 import {showLoader, hideLoader} from "../../components/Loader/loader.component";
 import Feedback from "../../components/postFeedback/feedback.component";
+import {Dark, Light} from "../../constants/global.styles";
+
+
+const Landing = () => {
+    // State variables
+    const {darkTheme, fileName, base64File, setFileName, setBase64} = useContext(LhotseContext);
+
+    const [isLoading, setLoading] = useState(true);
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState(false);
+    const [info, setInfo] = useState(false);
+
+    // Loader before DOM renders
+    useEffect(() => {
+        setInterval(() => setLoading(false), 2000);
+    }, []);
+
+    // Handle File in dropzone deletion
+    const handleDelete = () => {
+        setFileName('');
+        setBase64('');
+    };
+
+    // Handle Base64 file upload to endpoint in baseURL using Axios
+    const handleUpload = () => {
+        if (fileName.length < 1) setInfo(true)
+        if (base64File.length && typeof base64File === 'string' && fileName.length) {
+            let requestBody = {
+                File: base64File,
+                FileName: fileName,
+            };
+            showLoader()
+            axiosPost(`${baseUrl}`, requestBody).then((res) => {
+                if (res) {
+                   hideLoader();
+                   setSuccess(true);
+                   setError(false);
+
+                   setFileName('');
+                   setBase64('');
+                } else {
+                    hideLoader();
+                    setError(true);
+                    setSuccess(false);
+                }
+            });
+           // setInfo(false);
+        }
+        setSuccess(false);
+        setError(false);
+
+    };
+
+
+    return (
+        <ThemeProvider theme={theme}>
+            {
+                (isLoading) ? <Loader><Spinner loading={isLoading}/></Loader> :
+               <Main>
+                   {(darkTheme) ? <Dark/> : <Light/>}
+                   <Navbar />
+                   <Container>
+                       <Header>
+                           <HeaderText>
+                               Upload File in Base64 Format
+                           </HeaderText>
+                       </Header>
+                       <DropZone/>
+                       <ButtonWrap>
+                           {
+                               (fileName.length) ?
+                                   <FileDesc onClick={handleDelete}>
+                                       <SmallText>{fileName}</SmallText>
+                                        <img  src={Icons.trash} alt='cancel'/>
+                                   </FileDesc> : ''
+                           }
+                           <PrimaryButton name='Upload' handleClick={handleUpload}/>
+                       </ButtonWrap>
+                   </Container>
+
+               {/* Conditional Rendering of Toast Messages   */}
+                   {(success) ?  <Feedback notify='Upload was successful' status='success'/>: ''}
+                   {(error) ?   <Feedback notify='Upload was Failed' status='error'/> : ''}
+                   {(info) ?  <Feedback notify='Choose a file to upload' status='hint'/> : ''}
+               </Main>
+            }
+        </ThemeProvider>
+    )
+};
+
+export default Landing;
+
+
 
 
 
@@ -98,102 +191,3 @@ const SmallText = styled.p`
   overflow-x: hidden;
   color: ${props => props.theme.textColor};
 `;
-
-
-const Landing = () => {
-    // State variables
-    const {
-            fileName,
-            base64File,
-            setFileName,
-            setBase64
-        } = useContext(LhotseContext);
-
-    let [isLoading, setLoading] = useState(true);
-
-    let [success, setSuccess] = useState(false);
-    let [error, setError] = useState(false);
-    let [info, setInfo] = useState(false);
-
-    // Loader before DOM renders
-    useEffect(() => {
-        setInterval(() => setLoading(false), 2000);
-    }, []);
-
-    // Handle File in dropzone deletion
-    const handleDelete = () => {
-        setFileName('');
-        setBase64('');
-    };
-
-    // Handle Base64 file upload to endpoint in baseURL using Axios
-
-    const handleUpload = () => {
-        if (fileName.length < 1) setInfo(true)
-        if (base64File.length > 1 && typeof base64File === 'string' && fileName.length > 0) {
-            let requestBody = {
-                File: base64File,
-                FileName: fileName,
-            };
-            showLoader()
-            axiosPost(`${baseUrl}`, requestBody).then((res) => {
-                if (res) {
-                   hideLoader();
-                   setSuccess(true);
-                   setError(false);
-
-                   setFileName('');
-                   setBase64('');
-                } else {
-                    hideLoader();
-                    setError(true);
-                    setSuccess(false);
-                }
-            });
-           // setInfo(false);
-        }
-        setSuccess(false);
-        setError(false);
-
-    };
-
-
-    return (
-        <ThemeProvider theme={theme}>
-            {
-                (isLoading) ?
-                    <Loader>
-                        <Spinner loading={isLoading}/>
-                    </Loader> :
-               <Main>
-                   <Navbar />
-                   <Container>
-                       <Header>
-                           <HeaderText>
-                               Upload File in Base64 Format
-                           </HeaderText>
-                       </Header>
-                       <DropZone/>
-                       <ButtonWrap>
-                           {
-                               (fileName.length > 0) ?
-                                   <FileDesc onClick={handleDelete}>
-                                       <SmallText>{fileName}</SmallText>
-                                        <img  src={Icons.trash} alt='cancel'/>
-                                   </FileDesc> : ''
-                           }
-                           <PrimaryButton name='Upload' handleClick={handleUpload}/>
-                       </ButtonWrap>
-                   </Container>
-
-               {/* Conditional Rendering of Toast Messages   */}
-                   {(success) ?  <Feedback notify='Upload was successful' status='success'/>: ''}
-                   {(error) ?   <Feedback notify='Upload was Failed' status='error'/> : ''}
-                   {(info) ?  <Feedback notify='Choose a file to upload' status='hint'/> : ''}
-               </Main>
-            }
-        </ThemeProvider>
-    )
-};
-
-export default Landing;

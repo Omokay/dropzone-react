@@ -1,4 +1,3 @@
-import React from "react";
 import './toggler.css';
 
 const Toggler = ({handleClick}) => {
